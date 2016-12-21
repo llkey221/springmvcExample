@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	
+	<!-- 注解驱动，添加该 配置是为了在配置mvc:resources后使注解有效 -->
+	<mvc:annotation-driven conversion-service="conversionService1"/>
+	
+	<mvc:resources location="/css/" mapping="/css/**"/>
+	<mvc:resources location="/" mapping="/*.html"/>
+	
+	<context:component-scan base-package="cn.example.service.impl"/>
+	<context:component-scan base-package="cn.example.controller"/>
+	
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="cn.example.converter.StringToDateConverter">
+					<constructor-arg type="java.lang.String" value="yyyy-MM-dd"/>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<bean id="conversionService1" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- <property name="formatters">
+			<set>
+				<bean class="cn.example.formatter.DateFormatter">
+					<constructor-arg name="pattern" value="yyyy-MM-dd HH:mm:ss"/>					
+				</bean>
+			</set>
+		</property> -->
+		<property name="formatterRegistrars">
+			<set>
+				<bean class="cn.example.formatter.MyFormatterRegister">
+					<constructor-arg type="java.lang.String" value="yyyy-MM-dd"></constructor-arg>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames" value="classpath:/validator/message"/>
+	</bean>
+	
+</beans>
+	
