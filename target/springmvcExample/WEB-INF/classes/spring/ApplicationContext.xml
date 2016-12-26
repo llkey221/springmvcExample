@@ -11,18 +11,53 @@
 	http://www.springframework.org/schema/mvc 
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	
+	<context:component-scan base-package="cn.example.service.impl"/>
+	<context:component-scan base-package="cn.example.controller"/>
+	
 	<!-- 注解驱动，添加该 配置是为了在配置mvc:resources后使注解有效 -->
-	<mvc:annotation-driven></mvc:annotation-driven>
+	<mvc:annotation-driven conversion-service="conversionService1"/>
+	
 	<mvc:resources location="/css/" mapping="/css/**"/>
 	<mvc:resources location="/" mapping="/*.html"/>
-	
-	<context:component-scan base-package="cn.example.controller"/>
-	<context:component-scan base-package="cn.example.service.impl"/>
+	<mvc:resources location="/images/" mapping="/images/**"></mvc:resources>
 
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 	
+	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<set>
+				<bean class="cn.example.converter.StringToDateConverter">
+					<constructor-arg type="java.lang.String" value="yyyy-MM-dd"/>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<bean id="conversionService1" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- <property name="formatters">
+			<set>
+				<bean class="cn.example.formatter.DateFormatter">
+					<constructor-arg name="pattern" value="yyyy-MM-dd HH:mm:ss"/>					
+				</bean>
+			</set>
+		</property> -->
+		<property name="formatterRegistrars">
+			<set>
+				<bean class="cn.example.formatter.MyFormatterRegister">
+					<constructor-arg type="java.lang.String" value="yyyy-MM-dd"></constructor-arg>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames" value="classpath:/validator/message"/>
+	</bean>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
 </beans>
 	

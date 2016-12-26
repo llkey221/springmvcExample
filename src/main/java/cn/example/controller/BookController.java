@@ -1,9 +1,12 @@
 package cn.example.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.example.domain.Book;
@@ -61,7 +65,7 @@ public class BookController {
 	}
 	
 	@RequestMapping(value={"/book_save"},method={RequestMethod.POST})
-	public String saveBook(@Valid @ModelAttribute Book book,BindingResult bindingResult,
+	public String saveBook(HttpServletRequest request,@Valid @ModelAttribute Book book,BindingResult bindingResult,
 			RedirectAttributes redirectAttributes,Model model){
 
 		/*BookValidator  validator=new BookValidator();
@@ -87,6 +91,29 @@ public class BookController {
 		}
 		
 		logger.info("save book");
+		
+		List<MultipartFile> images=book.getImages();
+		List<String> imgNames=new ArrayList<String>();
+		
+		if(images!=null && images.size()>0){
+			for(MultipartFile multipartFile : images){
+				String fileName=multipartFile.getOriginalFilename();
+				imgNames.add(fileName);
+				
+				File file=new File(request.getServletContext().getRealPath("/images/")+
+						fileName);
+				
+				try {
+					multipartFile.transferTo(file);
+				} catch (IllegalStateException e) {
+					logger.error("ÉÏ´«Í¼Æ¬Ê§°Ü",e);
+					e.printStackTrace();
+				} catch (IOException e) {
+					logger.error("ÉÏ´«Í¼Æ¬Ê§°Ü",e);
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		Category category=categoryService.get(book.getCategory().getId());
 		book.setCategory(category);

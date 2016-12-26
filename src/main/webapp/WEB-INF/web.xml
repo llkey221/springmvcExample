@@ -3,11 +3,11 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" > -->
 
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
-id="WebApp_ID" version="2.5">
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+	id="WebApp_ID" version="3.0">
   <display-name>Archetype Created Web Application</display-name>
   
   <filter>
@@ -35,6 +35,11 @@ id="WebApp_ID" version="2.5">
   		<param-value>classpath:/spring/ApplicationContext.xml</param-value>
   	</init-param>
   	<load-on-startup>1</load-on-startup>
+  	<multipart-config>
+  		<max-file-size>20848820</max-file-size>
+  		<max-request-size>418018841</max-request-size>
+  		<file-size-threshold>1048576</file-size-threshold>
+  	</multipart-config>
   </servlet>
   <servlet-mapping>
   	<servlet-name>DispatcherServlet</servlet-name>

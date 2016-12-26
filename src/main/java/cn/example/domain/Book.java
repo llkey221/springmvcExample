@@ -2,12 +2,15 @@ package cn.example.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.web.multipart.MultipartFile;
 
 public class Book implements Serializable{
 
@@ -33,18 +36,23 @@ public class Book implements Serializable{
 	@Past
 	@NotNull
 	private Date producedDate;
+	@Range(min=0,max=1000)
+	private float price;
+	
+	private List<MultipartFile> images;
 	
 	public Book(){
 		
 	}
 	
-	public Book(long id,String isbn,String title,String author,Category category,
+	public Book(long id,String isbn,String title,String author,Category category,Float price,
 			Date producedDate){
 		this.id=id;
 		this.isbn=isbn;
 		this.title=title;
 		this.author=author;
 		this.category=category;
+		this.price=price;
 		this.producedDate=producedDate;
 	}
 
@@ -94,6 +102,22 @@ public class Book implements Serializable{
 
 	public void setProducedDate(Date producedDate) {
 		this.producedDate = producedDate;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public List<MultipartFile> getImages() {
+		return images;
+	}
+
+	public void setImages(List<MultipartFile> images) {
+		this.images = images;
 	}
 	
 }
