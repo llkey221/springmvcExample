@@ -56,8 +56,12 @@
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames" value="classpath:/validator/message"/>
 	</bean>
-	<!-- 文件上传 -->
-	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+	<!-- 文件上传  servlet 3.0 以上版本支持-->
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/> -->
+	<!-- 配合Commons fileUpload 组件使用 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="2000000"/>
+	</bean>
 
 </beans>
 	
